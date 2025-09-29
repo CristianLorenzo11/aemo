@@ -53,43 +53,57 @@
     transition: all 0.3s;
   }
 
-@media (max-width: 768px) {
-  .nav-links {
+  /* Overlay detrás del menú */
+  .overlay {
     position: fixed;
-    top: 0;
-    left: 0; /* sale desde la izquierda */
-    height: 100%;
-    width: 220px;
-    background: rgba(0,0,0,0.95);
-    flex-direction: column;
-    text-align: center;
-    padding-top: 80px;
-    gap: 25px;
-    transform: translateX(-100%); /* oculto a la izquierda */
-    transition: transform 0.3s ease-in-out;
-    z-index: 999;
-    border-radius: 0 12px 12px 0; /* curva solo del lado derecho */
-  }
-  .nav-links.active { transform: translateX(0); } /* cuando se abre */
-  .menu-toggle { display: flex; position: relative; z-index: 1000; }
-
-  /* === Animación de links en cascada === */
-  .nav-links a {
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7);
     opacity: 0;
-    transform: translateX(-20px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    z-index: 900;
   }
-  .nav-links.active a {
+  .overlay.active {
     opacity: 1;
-    transform: translateX(0);
+    visibility: visible;
   }
-  .nav-links.active a:nth-child(1) { transition-delay: 0.1s; }
-  .nav-links.active a:nth-child(2) { transition-delay: 0.2s; }
-  .nav-links.active a:nth-child(3) { transition-delay: 0.3s; }
-  .nav-links.active a:nth-child(4) { transition-delay: 0.4s; }
-}
 
+  @media (max-width: 768px) {
+    .nav-links {
+      position: fixed;
+      top: 0;
+      left: 0; /* sale desde la izquierda */
+      height: 100%;
+      width: 220px;
+      background: rgba(0,0,0,0.95);
+      flex-direction: column;
+      text-align: center;
+      padding-top: 80px;
+      gap: 25px;
+      transform: translateX(-100%); /* oculto a la izquierda */
+      transition: transform 0.3s ease-in-out;
+      z-index: 999;
+      border-radius: 0 12px 12px 0; /* curva solo del lado derecho */
+    }
+    .nav-links.active { transform: translateX(0); }
+    .menu-toggle { display: flex; position: relative; z-index: 1000; }
 
+    /* === Animación de links en cascada === */
+    .nav-links a {
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .nav-links.active a {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .nav-links.active a:nth-child(1) { transition-delay: 0.1s; }
+    .nav-links.active a:nth-child(2) { transition-delay: 0.2s; }
+    .nav-links.active a:nth-child(3) { transition-delay: 0.3s; }
+    .nav-links.active a:nth-child(4) { transition-delay: 0.4s; }
+  }
 
   /* ===== Header ===== */
   header {
@@ -235,6 +249,7 @@
     <a href="#contacto">Contacto</a>
   </div>
 </nav>
+<div class="overlay" id="overlay"></div>
 
 <!-- ===== Header ===== -->
 <header>
@@ -317,59 +332,60 @@
     contenedor.appendChild(card);
   });
 
+  // ===== Animaciones Scroll =====
+  function mostrarElementos() {
+    document.querySelectorAll('section, .card').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight - 100) el.classList.add('visible');
+    });
+  }
+  window.addEventListener('scroll', mostrarElementos);
+  window.addEventListener('load', mostrarElementos);
+
   // ===== Carrusel =====
-  const imagenes = document.querySelectorAll(".carrusel img");
-  const indicadores = document.querySelector(".carrusel .indicadores");
+  const carrusel = document.querySelector('.carrusel');
+  const imagenes = carrusel.querySelectorAll('img');
+  const prevBtn = carrusel.querySelector('.prev');
+  const nextBtn = carrusel.querySelector('.next');
+  const indicadores = carrusel.querySelector('.indicadores');
   let indice = 0;
-  function mostrarImagen(n){
-    imagenes.forEach(img => img.classList.remove("activo"));
-    document.querySelectorAll(".carrusel .indicadores span").forEach(i => i.classList.remove("activo"));
-    indice = (n + imagenes.length) % imagenes.length;
-    imagenes[indice].classList.add("activo");
-    indicadores.children[indice].classList.add("activo");
-  }
-  imagenes.forEach((_, i) => {
-    const span = document.createElement("span");
-    if(i===0) span.classList.add("activo");
-    span.addEventListener("click", ()=> mostrarImagen(i));
-    indicadores.appendChild(span);
-  });
-  document.querySelector(".carrusel .prev").addEventListener("click", ()=> mostrarImagen(indice-1));
-  document.querySelector(".carrusel .next").addEventListener("click", ()=> mostrarImagen(indice+1));
-  setInterval(()=> mostrarImagen(indice+1), 5000);
 
-  // ===== Scroll animaciones =====
-  const secciones = document.querySelectorAll("section");
-  const cards = document.querySelectorAll(".card");
-  function mostrarOnScroll(el){
-    const top = el.getBoundingClientRect().top;
-    if(top < window.innerHeight - 100){ el.classList.add("visible"); }
+  function mostrarImagen(i) {
+    imagenes.forEach((img, idx) => img.classList.toggle('activo', idx === i));
+    document.querySelectorAll('.indicadores span').forEach((dot, idx) => dot.classList.toggle('activo', idx === i));
   }
-  window.addEventListener("scroll", ()=>{
-    secciones.forEach(s => mostrarOnScroll(s));
-    cards.forEach(c => mostrarOnScroll(c));
+  imagenes.forEach((_, idx) => {
+    const dot = document.createElement('span');
+    if (idx === 0) dot.classList.add('activo');
+    dot.addEventListener('click', () => { indice = idx; mostrarImagen(indice); });
+    indicadores.appendChild(dot);
   });
+  prevBtn.addEventListener('click', () => { indice = (indice - 1 + imagenes.length) % imagenes.length; mostrarImagen(indice); });
+  nextBtn.addEventListener('click', () => { indice = (indice + 1) % imagenes.length; mostrarImagen(indice); });
+  setInterval(() => { indice = (indice + 1) % imagenes.length; mostrarImagen(indice); }, 4000);
 
-  // ===== Formulario WhatsApp =====
-  const numeroWhats = "5493755642826";
-  document.getElementById("contactForm").addEventListener("submit", function(e){
+  // ===== WhatsApp =====
+  document.getElementById('contactForm').addEventListener('submit', e => {
     e.preventDefault();
-    const mensaje = this.mensaje.value.trim();
-    if(!mensaje) return;
-    const texto = encodeURIComponent(`Hola Cristian, tengo una consulta:\nMensaje: ${mensaje}`);
-    const url = `https://wa.me/${numeroWhats}?text=${texto}`;
-    window.open(url, "_blank");
-    this.reset();
+    const mensaje = encodeURIComponent(e.target.mensaje.value);
+    window.open(`https://wa.me/543755642826?text=${mensaje}`, "_blank");
   });
 
   // ===== Navbar móvil =====
   const menuToggle = document.getElementById('menu-toggle');
   const navLinks = document.getElementById('nav-links');
+  const overlay = document.getElementById('overlay');
+
   menuToggle.addEventListener('click', () => {
     navLinks.classList.toggle('active');
     menuToggle.classList.toggle('active');
+    overlay.classList.toggle('active');
+  });
+  overlay.addEventListener('click', () => {
+    navLinks.classList.remove('active');
+    menuToggle.classList.remove('active');
+    overlay.classList.remove('active');
   });
 </script>
-
 </body>
 </html>
