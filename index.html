@@ -250,47 +250,97 @@
 </footer>
 
   <!-- ===== JAVASCRIPT ===== -->
-  <script>
-    // Lista de jugadoras
-    const jugadoras = [
-      { nombre: "Yami Acosta", posicion: "Delantera", desc: "Goleadora del equipo.", foto: "yami.jpg" },
-      { nombre: "Lurdes Rodriguez", posicion: "Defensora", desc: "Muralla en el fondo.", foto: "lurdes.jpg" },
-      { nombre: "Tamara Perez", posicion: "Defensora", desc: "Muralla en el fondo.", foto: "tamara.jpg" },
-      { nombre: "Ramira", posicion: "Arquera", desc: "Reflejos impresionantes.", foto: "ramira.jpg" },
-    ];
+<script>
+  // Lista de jugadoras
+  const jugadoras = [
+    { 
+      nombre: "Yami Acosta", 
+      posicion: "Delantera", 
+      desc: "Delantera letal, siempre bien ubicada y con gran olfato goleador.", 
+      foto: "yami.jpg" 
+    },
+    { 
+      nombre: "Lurdes Rodriguez", 
+      posicion: "Defensora", 
+      desc: "Sólida en la marca, entrega seguridad y firmeza en cada cruce.", 
+      foto: "lurdes.jpg" 
+    },
+    { 
+      nombre: "Tamara Perez", 
+      posicion: "Defensora", 
+      desc: "Guerrera incansable, fuerte en el uno contra uno y en el juego aéreo.", 
+      foto: "tamara.jpg" 
+    },
+    { 
+      nombre: "Ramira", 
+      posicion: "Arquera", 
+      desc: "Arquera segura, reflejos impresionantes y gran presencia en el arco.", 
+      foto: "ramira.jpg" 
+    },
+    { 
+      nombre: "Pamela", 
+      posicion: "Delantera", 
+      desc: "Velocidad pura y habilidad para desequilibrar en cualquier sector de la cancha.", 
+      foto: "pamela.jpg" 
+    },
+    { 
+      nombre: "Eloisa", 
+      posicion: "Mediocampista", 
+      desc: "Excelente técnica, visión de juego y precisión en los pases.", 
+      foto: "Eloisa.jpg" 
+    },
+    { 
+      nombre: "Kari", 
+      posicion: "Enganche", 
+      desc: "Enganche elegante, creadora de juego y dueña de una gran imaginación futbolística.", 
+      foto: "kari.jpg" 
+    },
+    { 
+      nombre: "Analía y Anabela", 
+      posicion: "Volantes ", 
+      desc: "Hermanas con gran despliegue físico y proyección constante; equilibrio entre marca y ataque.", 
+      foto: "hermanas.jpg"  
+    },
+    { 
+      nombre: "Luz", 
+      posicion: "Delantera", 
+      desc: "Delantera explosiva, con gran velocidad y potencia en el área rival.", 
+      foto: "luz.jpg"  
+    },
+  ];
 
-    const contenedor = document.getElementById("jugadoras-lista");
+  const contenedor = document.getElementById("jugadoras-lista");
 
-    jugadoras.forEach(j => {
-      const card = document.createElement("div");
-      card.classList.add("card");
-      card.innerHTML = `
-        <img src="${j.foto}" alt="${j.nombre}">
-        <div class="info">
-          <h3>${j.nombre}</h3>
-          <p><strong>Posición:</strong> ${j.posicion}</p>
-          <p>${j.desc}</p>
-        </div>
-      `;
-      contenedor.appendChild(card);
-    });
-// ===== Nuevo Carrusel =====
-const imagenes = document.querySelectorAll(".carrusel img");
-let indice = 0;
+  jugadoras.forEach(j => {
+    const card = document.createElement("div");
+    card.classList.add("card");
+    card.innerHTML = `
+      <img src="${j.foto}" alt="${j.nombre}">
+      <div class="info">
+        <h3>${j.nombre}</h3>
+        <p><strong>Posición:</strong> ${j.posicion}</p>
+        <p>${j.desc}</p>
+      </div>
+    `;
+    contenedor.appendChild(card);
+  });
 
-function mostrarImagen(n) {
-  imagenes.forEach(img => img.classList.remove("activo"));
-  indice = (n + imagenes.length) % imagenes.length;
-  imagenes[indice].classList.add("activo");
-}
+  // ===== Nuevo Carrusel =====
+  const imagenes = document.querySelectorAll(".carrusel img");
+  let indice = 0;
 
-document.querySelector(".carrusel .prev").addEventListener("click", () => mostrarImagen(indice - 1));
-document.querySelector(".carrusel .next").addEventListener("click", () => mostrarImagen(indice + 1));
+  function mostrarImagen(n) {
+    imagenes.forEach(img => img.classList.remove("activo"));
+    indice = (n + imagenes.length) % imagenes.length;
+    imagenes[indice].classList.add("activo");
+  }
 
-// Automático cada 5s
-setInterval(() => mostrarImagen(indice + 1), 5000);
+  document.querySelector(".carrusel .prev").addEventListener("click", () => mostrarImagen(indice - 1));
+  document.querySelector(".carrusel .next").addEventListener("click", () => mostrarImagen(indice + 1));
 
-  </script>
+  // Automático cada 5s
+  setInterval(() => mostrarImagen(indice + 1), 5000);
+</script>
 
 </body>
 </html>
