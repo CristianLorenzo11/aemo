@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AEMO Femenino</title>
   <style>
-      /* ===== Estilos Generales ===== */
+    /* ===== Estilos Generales ===== */
     body {
       margin: 0;
       font-family: 'Roboto', Arial, sans-serif;
@@ -26,7 +26,6 @@
       align-items: center;
       justify-content: center;
       gap: 15px;
-
     }
     header img {
       width: 70px;
@@ -44,7 +43,6 @@
       color: #dcdcdc;
     }
 
-
     /* ===== Secciones ===== */
     section {
       padding: 40px 20px;
@@ -54,12 +52,20 @@
       border-radius: 12px;
       border: 1px solid red; 
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 1s ease-out, transform 1s ease-out;
     }
+    section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     section:nth-child(odd) {
-      background: linear-gradient(135deg, #006400, #00cc44); /* verde */
+      background: linear-gradient(135deg, #006400, #00cc44);
     }
     section:nth-child(even) {
-      background: linear-gradient(135deg, #006400, #00cc44); /* verde */
+      background: linear-gradient(135deg, #006400, #00cc44);
     }
     h2 {
       margin-bottom: 20px;
@@ -69,24 +75,32 @@
       padding-bottom: 5px;
     }
     section p { color: #f1f1f1; }
-/* ===== Jugadoras ===== */
-.jugadoras {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* menor ancho mínimo */
-  gap: 20px;
-  justify-items: center; /* centra las tarjetas dentro del grid */
-}
 
-.card {
-  width: 100%;
-  max-width: 250px; /* evita que se agrande demasiado */
-  background-color: rgba(0,0,0,0.4);
-  border-radius: 12px;
-  border: 1px solid red; 
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-  overflow: hidden;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
+    /* ===== Jugadoras ===== */
+    .jugadoras {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      justify-items: center;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 250px;
+      background-color: rgba(0,0,0,0.4);
+      border-radius: 12px;
+      border: 1px solid red; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s, opacity 1s ease-out, transform 1s ease-out;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
     .card:hover {
       transform: translateY(-8px);
@@ -171,13 +185,12 @@
     }
 
     @media (max-width: 768px) {
-  header { flex-direction: column; text-align: center; }
-  header h1 { font-size: 1.6rem; }
-  .carrusel img { height: 220px; }
-  .mapa iframe { height: 250px; }
-  section { padding: 30px 15px; }
-}
-
+      header { flex-direction: column; text-align: center; }
+      header h1 { font-size: 1.6rem; }
+      .carrusel img { height: 220px; }
+      .mapa iframe { height: 250px; }
+      section { padding: 30px 15px; }
+    }
   </style>
 </head>
 <body>
@@ -191,7 +204,6 @@
     </div>
   </header>
 
-
   <!-- ===== SECCION CLUB ===== -->
   <section id="club">
     <h2>Sobre el Club</h2>
@@ -201,32 +213,33 @@
       la solidaridad y el trabajo en equipo.
     </p>
   </section>
-<!-- ===== SECCION ESTADIO ===== -->
-<section id="estadio">
-  <h2>Nuestro Estadio</h2>
-  <p>
-    El estadio se encuentra ubicado dentro del Complejo Polideportivo Ian Barney, 
-    perteneciente a la municipalidad de la ciudad misionera de Oberá.
-  </p>
 
-  <!-- Carrusel centrado -->
-  <div class="carrusel">
-    <img src="estadio1.jpg" alt="Estadio AEMO" class="activo">
-    <img src="estadio2.jpg" alt="Estadio AEMO">
-    <img src="estadio3.jpg" alt="Estadio AEMO">
+  <!-- ===== SECCION ESTADIO ===== -->
+  <section id="estadio">
+    <h2>Nuestro Estadio</h2>
+    <p>
+      El estadio se encuentra ubicado dentro del Complejo Polideportivo Ian Barney, 
+      perteneciente a la municipalidad de la ciudad misionera de Oberá.
+    </p>
 
-    <button class="prev">&#10094;</button>
-    <button class="next">&#10095;</button>
-  </div>
+    <!-- Carrusel centrado -->
+    <div class="carrusel">
+      <img src="estadio1.jpg" alt="Estadio AEMO" class="activo">
+      <img src="estadio2.jpg" alt="Estadio AEMO">
+      <img src="estadio3.jpg" alt="Estadio AEMO">
 
-  <!-- Google Maps centrado -->
-  <div class="mapa">
-    <iframe 
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3536.2650114814576!2d-55.1324189!3d-27.493054!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94f8f533e6675895%3A0x477cc4b166da067f!2sComplejo%20Polideportivo%20Ian%20Barney!5e0!3m2!1ses!2sar!4v1694450380000!5m2!1ses!2sar" 
-      allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-    </iframe>
-  </div>
-</section>
+      <button class="prev">&#10094;</button>
+      <button class="next">&#10095;</button>
+    </div>
+
+    <!-- Google Maps centrado -->
+    <div class="mapa">
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3536.2650114814576!2d-55.1324189!3d-27.493054!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94f8f533e6675895%3A0x477cc4b166da067f!2sComplejo%20Polideportivo%20Ian%20Barney!5e0!3m2!1ses!2sar!4v1694450380000!5m2!1ses!2sar" 
+        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </section>
 
   <!-- ===== SECCION JUGADORAS ===== -->
   <section id="jugadoras">
@@ -234,119 +247,92 @@
     <div class="jugadoras" id="jugadoras-lista"></div>
   </section>
 
-<!-- ===== SECCION CONTACTO ===== -->
-<section id="contacto">
-  <h2>Contacto</h2>
-  <div class="contacto-info">
-    <p>📍 Dirección: Complejo Polideportivo Ian Barney, Oberá, Misiones</p>
-    <p>📧 Email: contacto@aemofemenino.com</p>
-    <p>📞 Tel: (03755) 642826</p>
-  </div>
-</section>
+  <!-- ===== SECCION CONTACTO ===== -->
+  <section id="contacto">
+    <h2>Contacto</h2>
+    <div class="contacto-info">
+      <p>📍 Dirección: Complejo Polideportivo Ian Barney, Oberá, Misiones</p>
+      <p>📧 Email: contacto@aemofemenino.com</p>
+      <p>📞 Tel: (03755) 642826</p>
+    </div>
+  </section>
 
-<!-- ===== FOOTER ===== -->
-<footer>
-  <p>&copy; 2025 AEMO Femenino - Todos los derechos reservados</p>
-</footer>
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <p>&copy; 2025 AEMO Femenino - Todos los derechos reservados</p>
+  </footer>
 
-<!-- ===== JAVASCRIPT ===== -->
-<script>
-  // Lista de jugadoras
-  const jugadoras = [
-    { 
-      nombre: "Yami Costa", 
-      posicion: "Delantera", 
-      desc: "Delantera letal, siempre bien ubicada y con gran olfato goleador.", 
-      foto: "yami.jpg" 
-    },
-    { 
-      nombre: "Lurdes Rodriguez", 
-      posicion: "Defensora", 
-      desc: "Capitán del equipo, sólida en la marca, entrega seguridad y firmeza en cada cruce.", 
-      foto: "llurdes.jpg" 
-    },
-    { 
-      nombre: "Tamara Perez", 
-      posicion: "Defensora", 
-      desc: "Guerrera incansable, fuerte en el uno contra uno y en el juego aéreo.", 
-      foto: "tamara.jpg" 
-    },
-    { 
-      nombre: "Ramira", 
-      posicion: "Arquera", 
-      desc: "Arquera segura, reflejos impresionantes y gran presencia en el arco.", 
-      foto: "ramira.jpg" 
-    },
-    { 
-      nombre: "Pamela", 
-      posicion: "Delantera", 
-      desc: "Velocidad pura y habilidad para desequilibrar en cualquier sector de la cancha.", 
-      foto: "pamela.jpg" 
-    },
-    { 
-      nombre: "Eloisa", 
-      posicion: "Mediocampista", 
-      desc: "Excelente técnica, visión de juego y precisión en los pases.", 
-      foto: "Eloisa.jpg" 
-    },
-    { 
-      nombre: "Kari", 
-      posicion: "Enganche", 
-      desc: "Enganche elegante, creadora de juego y dueña de una gran imaginación futbolística.", 
-      foto: "kari.jpg" 
-    },
-    { 
-      nombre: "Analía y Anabela", 
-      posicion: "Volantes", 
-      desc: "Hermanas con gran despliegue físico y proyección constante; equilibrio entre marca y ataque.", 
-      foto: "hermanas.jpg"  
-    },
-    { 
-      nombre: "Luz", 
-      posicion: "Delantera", 
-      desc: "Delantera explosiva, con gran velocidad y potencia en el área rival.", 
-      foto: "luz.jpg"  
-    },
-    { 
-      nombre: "Dionela", 
-      posicion: "Defensora", 
-      desc: "Defensora versátil, capaz de jugar tanto de lateral como de central; destacada por su solidez y anticipación.", 
-      foto: "dionela.jpg"  
-    },
-  ];
+  <script>
+    // Lista de jugadoras
+    const jugadoras = [
+      { nombre: "Yami Costa", posicion: "Delantera", desc: "Delantera letal, siempre bien ubicada y con gran olfato goleador.", foto: "yami.jpg" },
+      { nombre: "Lurdes Rodriguez", posicion: "Defensora", desc: "Capitán del equipo, sólida en la marca, entrega seguridad y firmeza en cada cruce.", foto: "llurdes.jpg" },
+      { nombre: "Tamara Perez", posicion: "Defensora", desc: "Guerrera incansable, fuerte en el uno contra uno y en el juego aéreo.", foto: "tamara.jpg" },
+      { nombre: "Ramira", posicion: "Arquera", desc: "Arquera segura, reflejos impresionantes y gran presencia en el arco.", foto: "ramira.jpg" },
+      { nombre: "Pamela", posicion: "Delantera", desc: "Velocidad pura y habilidad para desequilibrar en cualquier sector de la cancha.", foto: "pamela.jpg" },
+      { nombre: "Eloisa", posicion: "Mediocampista", desc: "Excelente técnica, visión de juego y precisión en los pases.", foto: "Eloisa.jpg" },
+      { nombre: "Kari", posicion: "Enganche", desc: "Enganche elegante, creadora de juego y dueña de una gran imaginación futbolística.", foto: "kari.jpg" },
+      { nombre: "Analía y Anabela", posicion: "Volantes", desc: "Hermanas con gran despliegue físico y proyección constante; equilibrio entre marca y ataque.", foto: "hermanas.jpg"  },
+      { nombre: "Luz", posicion: "Delantera", desc: "Delantera explosiva, con gran velocidad y potencia en el área rival.", foto: "luz.jpg"  },
+      { nombre: "Dionela", posicion: "Defensora", desc: "Defensora versátil, capaz de jugar tanto de lateral como de central; destacada por su solidez y anticipación.", foto: "dionela.jpg"  },
+    ];
 
-  const contenedor = document.getElementById("jugadoras-lista");
+    const contenedor = document.getElementById("jugadoras-lista");
 
-  jugadoras.forEach(j => {
-    const card = document.createElement("div");
-    card.classList.add("card");
-    card.innerHTML = `
-      <img src="${j.foto}" alt="${j.nombre}">
-      <div class="info">
-        <h3>${j.nombre}</h3>
-        <p><strong>Posición:</strong> ${j.posicion}</p>
-        <p>${j.desc}</p>
-      </div>
-    `;
-    contenedor.appendChild(card);
-  });
+    jugadoras.forEach(j => {
+      const card = document.createElement("div");
+      card.classList.add("card");
+      card.innerHTML = `
+        <img src="${j.foto}" alt="${j.nombre}">
+        <div class="info">
+          <h3>${j.nombre}</h3>
+          <p><strong>Posición:</strong> ${j.posicion}</p>
+          <p>${j.desc}</p>
+        </div>
+      `;
+      contenedor.appendChild(card);
+    });
 
-  // ===== Nuevo Carrusel =====
-  const imagenes = document.querySelectorAll(".carrusel img");
-  let indice = 0;
+    // Carrusel
+    const imagenes = document.querySelectorAll(".carrusel img");
+    let indice = 0;
 
-  function mostrarImagen(n) {
-    imagenes.forEach(img => img.classList.remove("activo"));
-    indice = (n + imagenes.length) % imagenes.length;
-    imagenes[indice].classList.add("activo");
-  }
+    function mostrarImagen(n) {
+      imagenes.forEach(img => img.classList.remove("activo"));
+      indice = (n + imagenes.length) % imagenes.length;
+      imagenes[indice].classList.add("activo");
+    }
 
-  document.querySelector(".carrusel .prev").addEventListener("click", () => mostrarImagen(indice - 1));
-  document.querySelector(".carrusel .next").addEventListener("click", () => mostrarImagen(indice + 1));
+    document.querySelector(".carrusel .prev").addEventListener("click", () => mostrarImagen(indice - 1));
+    document.querySelector(".carrusel .next").addEventListener("click", () => mostrarImagen(indice + 1));
 
-  // Automático cada 5s
-  setInterval(() => mostrarImagen(indice + 1), 5000);
-</script>
+    setInterval(() => mostrarImagen(indice + 1), 5000);
+
+    // Efecto fade-in secciones
+    const secciones = document.querySelectorAll("section");
+    const tarjetas = document.querySelectorAll(".card");
+
+    function mostrarScroll() {
+      const triggerBottom = window.innerHeight * 0.85;
+
+      secciones.forEach((section, i) => {
+        const sectionTop = section.getBoundingClientRect().top;
+        if(sectionTop < triggerBottom) {
+          setTimeout(() => section.classList.add("visible"), i * 150);
+        }
+      });
+
+      tarjetas.forEach((card, i) => {
+        const cardTop = card.getBoundingClientRect().top;
+        if(cardTop < triggerBottom) {
+          setTimeout(() => card.classList.add("visible"), i * 100);
+        }
+      });
+    }
+
+    window.addEventListener("scroll", mostrarScroll);
+    window.addEventListener("load", mostrarScroll);
+  </script>
 
 </body>
 </html>
