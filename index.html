@@ -1,338 +1,375 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AEMO Femenino</title>
-  <style>
-    /* ===== Estilos Generales ===== */
-    body {
-      margin: 0;
-      font-family: 'Roboto', Arial, sans-serif;
-      background-color: #a71212;
-      color: #f1f1f1;
-      line-height: 1.6;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AEMO Femenino</title>
+<style>
+  /* ===== General ===== */
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: 'Roboto', Arial, sans-serif;
+    color: #f1f1f1;
+    background: #0a0a0a;
+  }
+  a { text-decoration: none; color: inherit; }
 
-    a { text-decoration: none; color: inherit; }
+  /* ===== Navbar ===== */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: rgba(20,20,20,0.95);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.7);
+  }
+  .nav-links {
+    display: flex;
+    gap: 30px;
+    font-weight: bold;
+  }
+  .nav-links a {
+    color: #f1f1f1;
+    transition: all 0.3s;
+    font-size: 1.1rem;
+  }
+  .nav-links a:hover { color: #00ff88; transform: scale(1.1); }
 
-    /* ===== Header ===== */
-    header {
-      background-color: #a71212;
-      color: #f1f1f1;
-      padding: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-    }
-    header img {
-      width: 150px;
-      height: 150px;
-      object-fit: contain;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 2.2rem;
-      text-shadow: 1px 1px 5px rgba(0,0,0,0.6);
-    }
-    header p {
-      margin: 5px 0 0 0;
-      font-size: 1rem;
-      color: #dcdcdc;
-    }
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 5px;
+  }
+  .menu-toggle div {
+    width: 25px;
+    height: 3px;
+    background-color: #f1f1f1;
+    transition: all 0.3s;
+  }
 
-    /* ===== Secciones ===== */
-    section {
-      padding: 40px 20px;
-      max-width: 1100px;
-      margin: 30px auto;
-      text-align: left;
-      border-radius: 12px;
-      border: 1px solid red; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 1s ease-out, transform 1s ease-out;
-    }
-    section.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+@media (max-width: 768px) {
+  .nav-links {
+    position: fixed;
+    top: 0;
+    left: 0; /* sale desde la izquierda */
+    height: 100%;
+    width: 220px;
+    background: rgba(0,0,0,0.95);
+    flex-direction: column;
+    text-align: center;
+    padding-top: 80px;
+    gap: 25px;
+    transform: translateX(-100%); /* oculto a la izquierda */
+    transition: transform 0.3s ease-in-out;
+    z-index: 999;
+    border-radius: 0 12px 12px 0; /* curva solo del lado derecho */
+  }
+  .nav-links.active { transform: translateX(0); } /* cuando se abre */
+  .menu-toggle { display: flex; position: relative; z-index: 1000; }
 
-    section:nth-child(odd) {
-      background: linear-gradient(135deg, #006400, #00cc44);
-    }
-    section:nth-child(even) {
-      background: linear-gradient(135deg, #006400, #00cc44);
-    }
-    h2 {
-      margin-bottom: 20px;
-      color: #f1f1f1;
-      border-bottom: 3px solid #f1f1f1;
-      display: inline-block;
-      padding-bottom: 5px;
-    }
-    section p { color: #f1f1f1; }
+  /* === Animación de links en cascada === */
+  .nav-links a {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .nav-links.active a {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .nav-links.active a:nth-child(1) { transition-delay: 0.1s; }
+  .nav-links.active a:nth-child(2) { transition-delay: 0.2s; }
+  .nav-links.active a:nth-child(3) { transition-delay: 0.3s; }
+  .nav-links.active a:nth-child(4) { transition-delay: 0.4s; }
+}
 
-    /* ===== Jugadoras ===== */
-    .jugadoras {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      justify-items: center;
-    }
 
-    .card {
-      width: 100%;
-      max-width: 250px;
-      background-color: rgba(0,0,0,0.4);
-      border-radius: 12px;
-      border: 1px solid red; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      overflow: hidden;
-      transition: transform 0.3s, box-shadow 0.3s, opacity 1s ease-out, transform 1s ease-out;
-      opacity: 0;
-      transform: translateY(30px);
-    }
 
-    .card.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  /* ===== Header ===== */
+  header {
+    padding: 140px 20px 80px 20px;
+    text-align: center;
+    background: linear-gradient(135deg, #a71212, #ff0000);
+    overflow: hidden;
+  }
+  header img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    border-radius: 50%;
+    border: 6px solid #00ff88;
+    box-shadow: 0 0 40px #00ff88;
+    margin-bottom: 15px;
+    transition: transform 0.5s;
+  }
+  header img:hover { transform: scale(1.1) rotate(-5deg); }
+  header h1 {
+    margin: 10px 0 5px 0;
+    font-size: 3.2rem;
+    text-shadow: 2px 2px 12px rgba(0,0,0,0.8);
+  }
+  header p { margin: 0; font-size: 1.3rem; color: #dcdcdc; }
 
-    .card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.7);
-    }
-    .card img {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-    }
-    .card .info {
-      padding: 15px;
-      text-align: center;
-    }
-    .card .info h3 { margin: 10px 0 5px; color: red; }
-    .card .info p { margin: 5px 0; font-size: 0.9rem; color: #f1f1f1; }
+  /* ===== Secciones ===== */
+  section {
+    padding: 80px 20px;
+    max-width: 1100px;
+    margin: 60px auto;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 1s ease-out;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+  }
+  section::before {
+    content: "";
+    position: absolute;
+    top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.4);
+    border-radius: 12px;
+    z-index: 0;
+  }
+  section.visible { opacity: 1; transform: translateY(0); }
+  section:nth-child(odd) { background: linear-gradient(135deg, #006400, #00cc44); }
+  section:nth-child(even) { background: linear-gradient(135deg, #004d00, #009933); }
+  section h2, section p { position: relative; z-index: 1; }
+  h2 { margin-bottom: 25px; color: #f1f1f1; border-bottom: 3px solid #f1f1f1; display: inline-block; padding-bottom: 5px; }
+  section p { color: #f1f1f1; font-size: 1.1rem; }
 
-    /* ===== Carrusel Estadio ===== */
-    .carrusel {
-      position: relative;
-      max-width: 700px;
-      margin: 20px auto;
-      border: 1px solid red; 
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-    }
-    .carrusel img {
-      width: 100%;
-      height: 350px;
-      object-fit: cover;
-      display: none;
-    }
-    .carrusel img.activo { display: block; }
-    .carrusel button {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(0,0,0,0.5);
-      color: white;
-      border: none;
-      font-size: 1.6rem;
-      cursor: pointer;
-      padding: 6px;
-      border-radius: 50%;
-      transition: background 0.3s;
-    }
-    .carrusel button:hover { background: rgba(0,0,0,0.8); }
-    .carrusel .prev { left: 10px; }
-    .carrusel .next { right: 10px; }
+  /* ===== Jugadoras ===== */
+  .jugadoras { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; justify-items: center; }
+  .card {
+    width: 100%;
+    max-width: 250px;
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    overflow: hidden;
+    transition: transform 0.5s ease, opacity 0.5s ease, box-shadow 0.5s ease;
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  .card.visible { opacity: 1; transform: translateY(0); }
+  .card:hover { transform: translateY(-10px) scale(1.05); box-shadow: 0 15px 30px rgba(0,0,0,0.8); }
+  .card img { width: 100%; height: 250px; object-fit: cover; transition: transform 0.5s; }
+  .card img:hover { transform: scale(1.1); }
+  .card .info { padding: 15px; text-align: center; }
+  .card .info h3 { margin: 10px 0 5px; color: #00ff88; }
+  .card .info p { margin: 5px 0; font-size: 0.9rem; color: #f1f1f1; }
 
-    /* ===== Google Maps ===== */
-    .mapa {
-      margin: 20px auto;
-      max-width: 700px;
-      border: 3px solid red; 
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    }
-    .mapa iframe {
-      width: 100%;
-      height: 350px;
-      border: none;
-    }
+  /* ===== Carrusel ===== */
+  .carrusel { position: relative; max-width: 700px; margin: 20px auto; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.6); }
+  .carrusel img { width: 100%; height: 350px; object-fit: cover; display: none; border-radius: 12px; transition: transform 0.5s ease; }
+  .carrusel img.activo { display: block; }
+  .carrusel button {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(0,0,0,0.6); color: white; border: none; font-size: 1.6rem; cursor: pointer; padding: 8px; border-radius: 50%; transition: all 0.3s;
+  }
+  .carrusel button:hover { background: rgba(0,0,0,0.9); transform: scale(1.2); }
+  .carrusel .prev { left: 10px; }
+  .carrusel .next { right: 10px; }
+  .carrusel .indicadores { text-align: center; margin-top: 12px; }
+  .carrusel .indicadores span {
+    display: inline-block; width: 14px; height: 14px; background: #fff; margin: 0 5px; border-radius: 50%; cursor: pointer; opacity: 0.6; transition: all 0.3s;
+  }
+  .carrusel .indicadores span.activo { opacity: 1; transform: scale(1.2); }
 
-    /* ===== Contacto ===== */
-    #contacto {
-      text-align: center;
-    }
-    #contacto .contacto-info p {
-      margin: 8px 0;
-      font-size: 1rem;
-      color: #f1f1f1;
-    }
+  /* ===== Mapa ===== */
+  .mapa { margin: 20px auto; max-width: 700px; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.6); }
+  .mapa iframe { width: 100%; height: 350px; border: none; border-radius: 12px; }
 
-    /* ===== Footer ===== */
-    footer {
-      background-color: #a71212;
-      color: white;
-      text-align: center;
-    }
+  /* ===== Contacto ===== */
+  #contacto { text-align: center; }
+  #contacto form {
+    margin: 20px auto;
+    max-width: 500px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  #contacto textarea {
+    padding: 14px; border-radius: 10px; border: none; outline: none; font-size: 1rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    transition: all 0.3s;
+  }
+  #contacto textarea:focus { box-shadow: 0 4px 20px #00ff88; }
+  #contacto button {
+    padding: 14px; border-radius: 10px; border: none; background-color: #00ff88;
+    color: #000; font-weight: bold; cursor: pointer; font-size: 1.1rem; transition: all 0.3s;
+  }
+  #contacto button:hover { background-color: #00cc66; transform: scale(1.05); }
 
-    @media (max-width: 768px) {
-      header { flex-direction: column; text-align: center; }
-      header h1 { font-size: 1.6rem; }
-      .carrusel img { height: 220px; }
-      .mapa iframe { height: 250px; }
-      section { padding: 30px 15px; }
-    }
-  </style>
+  /* ===== Footer ===== */
+  footer { background-color: #111; color: #f1f1f1; text-align: center; padding: 20px; font-size: 0.9rem; box-shadow: 0 -4px 12px rgba(0,0,0,0.6); }
+
+  @media (max-width: 768px) {
+    header img { width: 150px; height: 150px; }
+    header h1 { font-size: 2.4rem; }
+    .carrusel img { height: 220px; }
+    .mapa iframe { height: 250px; }
+    .jugadoras { grid-template-columns: 1fr; }
+    section { padding: 50px 15px; }
+  }
+</style>
 </head>
 <body>
 
-  <!-- ===== HEADER ===== -->
-  <header>
-    <img src="lolololo.png" alt="Logo AEMO">
-    <div>
-      <h1>AEMO Femenino</h1>
-      <p>Pasión, esfuerzo y compromiso dentro y fuera de la cancha.</p>
-    </div>
-  </header>
+<!-- ===== Navbar ===== -->
+<nav>
+  <div class="menu-toggle" id="menu-toggle">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+  <div class="nav-links" id="nav-links">
+    <a href="#club">Club</a>
+    <a href="#estadio">Estadio</a>
+    <a href="#jugadoras">Jugadoras</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+</nav>
 
-  <!-- ===== SECCION CLUB ===== -->
-  <section id="club">
-    <h2>Sobre el Club</h2>
-    <p>
-      El Club AEMO Femenino es un espacio donde el deporte, la amistad y el esfuerzo se unen. 
-      Nuestro objetivo es crecer dentro y fuera de la cancha, fomentando valores como el respeto, 
-      la solidaridad y el trabajo en equipo.
-    </p>
-  </section>
+<!-- ===== Header ===== -->
+<header>
+  <img src="lolololo.png" alt="Logo AEMO">
+  <h1>AEMO Femenino</h1>
+  <p>Pasión, esfuerzo y compromiso dentro y fuera de la cancha.</p>
+</header>
 
-  <!-- ===== SECCION ESTADIO ===== -->
-  <section id="estadio">
-    <h2>Nuestro Estadio</h2>
-    <p>
-      El estadio se encuentra ubicado dentro del Complejo Polideportivo Ian Barney, 
-      perteneciente a la municipalidad de la ciudad misionera de Oberá.
-    </p>
+<!-- ===== Club ===== -->
+<section id="club">
+  <h2>Sobre el Club</h2>
+  <p>El Club AEMO Femenino es un espacio donde el deporte, la amistad y el esfuerzo se unen. Nuestro objetivo es crecer dentro y fuera de la cancha, fomentando valores como el respeto, la solidaridad y el trabajo en equipo.</p>
+</section>
 
-    <!-- Carrusel centrado -->
-    <div class="carrusel">
-      <img src="estadio1.jpg" alt="Estadio AEMO" class="activo">
-      <img src="estadio2.jpg" alt="Estadio AEMO">
-      <img src="estadio3.jpg" alt="Estadio AEMO">
+<!-- ===== Estadio ===== -->
+<section id="estadio">
+  <h2>Nuestro Estadio</h2>
+  <p>El estadio se encuentra ubicado dentro del Complejo Polideportivo Ian Barney, perteneciente a la municipalidad de la ciudad misionera de Oberá.</p>
 
-      <button class="prev">&#10094;</button>
-      <button class="next">&#10095;</button>
-    </div>
+  <div class="carrusel">
+    <img src="estadio1.jpg" alt="Estadio AEMO" class="activo" loading="lazy">
+    <img src="estadio2.jpg" alt="Estadio AEMO" loading="lazy">
+    <img src="estadio3.jpg" alt="Estadio AEMO" loading="lazy">
+    <button class="prev">&#10094;</button>
+    <button class="next">&#10095;</button>
+    <div class="indicadores"></div>
+  </div>
 
-    <!-- Google Maps centrado -->
-    <div class="mapa">
-      <iframe 
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3536.2650114814576!2d-55.1324189!3d-27.493054!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94f8f533e6675895%3A0x477cc4b166da067f!2sComplejo%20Polideportivo%20Ian%20Barney!5e0!3m2!1ses!2sar!4v1694450380000!5m2!1ses!2sar" 
-        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-      </iframe>
-    </div>
-  </section>
+  <div class="mapa">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3536.2650114814576!2d-55.1324189!3d-27.493054!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94f8f533e6675895%3A0x477cc4b166da067f!2sComplejo%20Polideportivo%20Ian%20Barney!5e0!3m2!1ses!2sar!4v1694450380000!5m2!1ses!2sar" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+</section>
 
-  <!-- ===== SECCION JUGADORAS ===== -->
-  <section id="jugadoras">
-    <h2>Nuestras Jugadoras</h2>
-    <div class="jugadoras" id="jugadoras-lista"></div>
-  </section>
+<!-- ===== Jugadoras ===== -->
+<section id="jugadoras">
+  <h2>Nuestras Jugadoras</h2>
+  <div class="jugadoras" id="jugadoras-lista"></div>
+</section>
 
-  <!-- ===== SECCION CONTACTO ===== -->
-  <section id="contacto">
-    <h2>Contacto</h2>
-    <div class="contacto-info">
-      <p>📍 Dirección: Complejo Polideportivo Ian Barney, Oberá, Misiones</p>
-      <p>📧 Email: contacto@aemofemenino.com</p>
-      <p>📞 Tel: (03755) 642826</p>
-    </div>
-  </section>
+<!-- ===== Contacto ===== -->
+<section id="contacto">
+  <h2>Contacto</h2>
+  <form id="contactForm">
+    <textarea name="mensaje" placeholder="Escribe tu consulta..." required></textarea>
+    <button type="submit">Enviar por WhatsApp</button>
+  </form>
+</section>
 
-  <!-- ===== FOOTER ===== -->
-  <footer>
-    <p>&copy; 2025 AEMO Femenino - Todos los derechos reservados</p>
-  </footer>
+<!-- ===== Footer ===== -->
+<footer>
+  <p>&copy; 2025 AEMO Femenino - Todos los derechos reservados</p>
+</footer>
 
-  <script>
-    // Lista de jugadoras
-    const jugadoras = [
-      { nombre: "Yami Costa", posicion: "Delantera", desc: "Delantera letal, siempre bien ubicada y con gran olfato goleador.", foto: "yami.jpg" },
-      { nombre: "Lurdes Rodriguez", posicion: "Defensora", desc: "Capitán del equipo, sólida en la marca, entrega seguridad y firmeza en cada cruce.", foto: "llurdes.jpg" },
-      { nombre: "Tamara Perez", posicion: "Defensora", desc: "Guerrera incansable, fuerte en el uno contra uno y en el juego aéreo.", foto: "tamara.jpg" },
-      { nombre: "Ramira", posicion: "Arquera", desc: "Arquera segura, reflejos impresionantes y gran presencia en el arco.", foto: "ramira.jpg" },
-      { nombre: "Pamela", posicion: "Delantera", desc: "Velocidad pura y habilidad para desequilibrar en cualquier sector de la cancha.", foto: "pamela.jpg" },
-      { nombre: "Eloisa", posicion: "Mediocampista", desc: "Excelente técnica, visión de juego y precisión en los pases.", foto: "Eloisa.jpg" },
-      { nombre: "Kari", posicion: "Enganche", desc: "Enganche elegante, creadora de juego y dueña de una gran imaginación futbolística.", foto: "kari.jpg" },
-      { nombre: "Analía y Anabela", posicion: "Volantes", desc: "Hermanas con gran despliegue físico y proyección constante; equilibrio entre marca y ataque.", foto: "hermanas.jpg"  },
-      { nombre: "Luz", posicion: "Delantera", desc: "Delantera explosiva, con gran velocidad y potencia en el área rival.", foto: "luz.jpg"  },
-      { nombre: "Dionela", posicion: "Defensora", desc: "Defensora versátil, capaz de jugar tanto de lateral como de central; destacada por su solidez y anticipación.", foto: "dionela.jpg"  },
-    ];
+<script>
+  // ===== Jugadoras =====
+  const jugadoras = [
+    { nombre: "Yami Costa", posicion: "Delantera", desc: "Delantera letal, siempre bien ubicada y con gran olfato goleador.", foto: "yami.jpg" },
+    { nombre: "Lurdes Rodriguez", posicion: "Defensora", desc: "Capitán del equipo, sólida en la marca, entrega seguridad y firmeza en cada cruce.", foto: "llurdes.jpg" },
+    { nombre: "Tamara Perez", posicion: "Defensora", desc: "Guerrera incansable, fuerte en el uno contra uno y en el juego aéreo.", foto: "tamara.jpg" },
+    { nombre: "Ramira", posicion: "Arquera", desc: "Arquera segura, reflejos impresionantes y gran presencia en el arco.", foto: "ramira.jpg" },
+    { nombre: "Pamela", posicion: "Delantera", desc: "Velocidad pura y habilidad para desequilibrar en cualquier sector de la cancha.", foto: "pamela.jpg" },
+    { nombre: "Eloisa", posicion: "Mediocampista", desc: "Excelente técnica, visión de juego y precisión en los pases.", foto: "Eloisa.jpg" },
+    { nombre: "Kari", posicion: "Enganche", desc: "Enganche elegante, creadora de juego y dueña de una gran imaginación futbolística.", foto: "kari.jpg" },
+    { nombre: "Analía y Anabela", posicion: "Volantes", desc: "Hermanas con gran despliegue físico y proyección constante; equilibrio entre marca y ataque.", foto: "hermanas.jpg" },
+    { nombre: "Luz", posicion: "Delantera", desc: "Delantera explosiva, con gran velocidad y potencia en el área rival.", foto: "luz.jpg" },
+    { nombre: "Dionela", posicion: "Defensora", desc: "Defensora versátil, capaz de jugar tanto de lateral como de central; destacada por su solidez y anticipación.", foto: "dionela.jpg" }
+  ];
+  const contenedor = document.getElementById("jugadoras-lista");
+  jugadoras.forEach(j => {
+    const card = document.createElement("div");
+    card.classList.add("card");
+    card.innerHTML = `
+      <img src="${j.foto}" alt="${j.nombre}">
+      <div class="info">
+        <h3>${j.nombre}</h3>
+        <p><strong>Posición:</strong> ${j.posicion}</p>
+        <p>${j.desc}</p>
+      </div>
+    `;
+    contenedor.appendChild(card);
+  });
 
-    const contenedor = document.getElementById("jugadoras-lista");
+  // ===== Carrusel =====
+  const imagenes = document.querySelectorAll(".carrusel img");
+  const indicadores = document.querySelector(".carrusel .indicadores");
+  let indice = 0;
+  function mostrarImagen(n){
+    imagenes.forEach(img => img.classList.remove("activo"));
+    document.querySelectorAll(".carrusel .indicadores span").forEach(i => i.classList.remove("activo"));
+    indice = (n + imagenes.length) % imagenes.length;
+    imagenes[indice].classList.add("activo");
+    indicadores.children[indice].classList.add("activo");
+  }
+  imagenes.forEach((_, i) => {
+    const span = document.createElement("span");
+    if(i===0) span.classList.add("activo");
+    span.addEventListener("click", ()=> mostrarImagen(i));
+    indicadores.appendChild(span);
+  });
+  document.querySelector(".carrusel .prev").addEventListener("click", ()=> mostrarImagen(indice-1));
+  document.querySelector(".carrusel .next").addEventListener("click", ()=> mostrarImagen(indice+1));
+  setInterval(()=> mostrarImagen(indice+1), 5000);
 
-    jugadoras.forEach(j => {
-      const card = document.createElement("div");
-      card.classList.add("card");
-      card.innerHTML = `
-        <img src="${j.foto}" alt="${j.nombre}">
-        <div class="info">
-          <h3>${j.nombre}</h3>
-          <p><strong>Posición:</strong> ${j.posicion}</p>
-          <p>${j.desc}</p>
-        </div>
-      `;
-      contenedor.appendChild(card);
-    });
+  // ===== Scroll animaciones =====
+  const secciones = document.querySelectorAll("section");
+  const cards = document.querySelectorAll(".card");
+  function mostrarOnScroll(el){
+    const top = el.getBoundingClientRect().top;
+    if(top < window.innerHeight - 100){ el.classList.add("visible"); }
+  }
+  window.addEventListener("scroll", ()=>{
+    secciones.forEach(s => mostrarOnScroll(s));
+    cards.forEach(c => mostrarOnScroll(c));
+  });
 
-    // Carrusel
-    const imagenes = document.querySelectorAll(".carrusel img");
-    let indice = 0;
+  // ===== Formulario WhatsApp =====
+  const numeroWhats = "5493755642826";
+  document.getElementById("contactForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    const mensaje = this.mensaje.value.trim();
+    if(!mensaje) return;
+    const texto = encodeURIComponent(`Hola Cristian, tengo una consulta:\nMensaje: ${mensaje}`);
+    const url = `https://wa.me/${numeroWhats}?text=${texto}`;
+    window.open(url, "_blank");
+    this.reset();
+  });
 
-    function mostrarImagen(n) {
-      imagenes.forEach(img => img.classList.remove("activo"));
-      indice = (n + imagenes.length) % imagenes.length;
-      imagenes[indice].classList.add("activo");
-    }
-
-    document.querySelector(".carrusel .prev").addEventListener("click", () => mostrarImagen(indice - 1));
-    document.querySelector(".carrusel .next").addEventListener("click", () => mostrarImagen(indice + 1));
-
-    setInterval(() => mostrarImagen(indice + 1), 5000);
-
-    // Efecto fade-in secciones
-    const secciones = document.querySelectorAll("section");
-    const tarjetas = document.querySelectorAll(".card");
-
-    function mostrarScroll() {
-      const triggerBottom = window.innerHeight * 0.85;
-
-      secciones.forEach((section, i) => {
-        const sectionTop = section.getBoundingClientRect().top;
-        if(sectionTop < triggerBottom) {
-          setTimeout(() => section.classList.add("visible"), i * 150);
-        }
-      });
-
-      tarjetas.forEach((card, i) => {
-        const cardTop = card.getBoundingClientRect().top;
-        if(cardTop < triggerBottom) {
-          setTimeout(() => card.classList.add("visible"), i * 100);
-        }
-      });
-    }
-
-    window.addEventListener("scroll", mostrarScroll);
-    window.addEventListener("load", mostrarScroll);
-  </script>
+  // ===== Navbar móvil =====
+  const menuToggle = document.getElementById('menu-toggle');
+  const navLinks = document.getElementById('nav-links');
+  menuToggle.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+    menuToggle.classList.toggle('active');
+  });
+</script>
 
 </body>
 </html>
